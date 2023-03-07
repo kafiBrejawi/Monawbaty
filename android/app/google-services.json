@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "103009173711",
+    "project_id": "monawpaty",
+    "storage_bucket": "monawpaty.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:103009173711:android:cc7be0baafa10cbf1637ba",
+        "android_client_info": {
+          "package_name": "com.shk.monawpaty.monawpaty"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "103009173711-klt8cjjk4u8pus5oa9b57qfqfskklue9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shk.monawpaty.monawpaty",
+            "certificate_hash": "747193a5443e9471c79b06eda8f048897772df57"
+          }
+        },
+        {
+          "client_id": "103009173711-sjf2m2m1dqj76r3l97va40j2pmo7kf2n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCoi80IGuqab4X8i1BsTkrQv02Nq-8kSM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "103009173711-sjf2m2m1dqj76r3l97va40j2pmo7kf2n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

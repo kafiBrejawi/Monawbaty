@@ -1,0 +1,197 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import '../../../shared/urls_constants.dart';
+
+part 'registration_state.dart';
+
+class RegistrationCubit extends Cubit<RegistrationState> {
+  RegistrationCubit() : super(RegistrationInitial());
+
+  static RegistrationCubit get(context) => BlocProvider.of(context);
+
+  final formKey1 = GlobalKey<FormState>();
+  final formKey2 = GlobalKey<FormState>();
+  final fullNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final userNameController = TextEditingController();
+  final passwordController = TextEditingController();
+  final phoneController = TextEditingController();
+  String? internationalNumber;
+  String? gender;
+  bool? operations;
+  bool? opLeader;
+  String? location;
+  String? rank;
+  String? image;
+  File? imageFile;
+  List<String> locationList = ["300", "320", "350", "360", "370", "380", "390"];
+  List<String> rankList = [
+    'قائد',
+    'كشاف',
+    'مسعف',
+  ];
+
+  Future getImage() async {
+    try {
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        imageFile = File(pickedFile.path);
+        List<int> imageBytes = imageFile!.readAsBytesSync();
+        image = "data:image/png;base64,${base64Encode(imageBytes)}";
+        emit(RegistrationChangeNotifier());
+      }
+    } catch (e) {
+      emit(RegistrationFailure("Image cannot be loaded"));
+    }
+  }
+
+  Future<void> registrationUser() async {
+    try {
+      emit(RegistrationLoading());
+      var url = Uri.parse(
+          ConstantsService.baseUrl + ConstantsService.registrationEndpoint);
+
+      var response = await http.post(url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(<String, dynamic>{
+            "fullName": fullNameController.text,
+            "username": userNameController.text,
+            "password": passwordController.text,
+            "email": emailController.text,
+            "phoneNumber": "963${phoneController.text.substring(1)}",
+            "gender": gender!,
+            "operations": operations,
+            "op_leader": opLeader,
+            "location": location!,
+            "rank": rank!,
+            "image": image!
+          }));
+      if (response.statusCode == 200) {
+        phoneAuth();
+        //.whenComplete(() => emit(RegistrationSuccess()));
+      } else {
+        throw Exception('Invalid');
+      }
+    } catch (e) {
+      emit(RegistrationFailure(e.toString()));
+    }
+  }
+
+  Future phoneAuth() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    await auth.verifyPhoneNumber(
+      //  phoneNumber: '+963952347334',
+      phoneNumber: '+963992844918',
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        // ANDROID ONLY!
+
+        // Sign the user in (or link) with the auto-generated credential
+        await auth.signInWithCredential(credential);
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
+      codeSent: (String verificationId, int? forceResendingToken) {},
+      verificationFailed: (FirebaseAuthException error) {},
+    );
+  }
+
+  // phoneAuth() async {
+  //   print("auth");
+  //   FirebaseAuth auth = FirebaseAuth.instance;
+  //   await FirebaseAuth.instance.verifyPhoneNumber(
+  //     phoneNumber: '+963992844918',
+  //     verificationCompleted: (PhoneAuthCredential credential) async {
+  //       // await auth.signInWithCredential(credential);
+  //     },
+  //     verificationFailed: (FirebaseAuthException e) {
+  //       if (e.code == 'invalid-phone-number') {
+  //         print('The provided phone number is not valid.');
+  //       }
+  //     },
+  //     codeSent: (String verificationId, int? resendToken) {},
+  //     codeAutoRetrievalTimeout: (String verificationId) {},
+  //   );
+  // }
+
+  IconData suffix = Icons.visibility_off_outlined;
+  bool isPassword = true;
+  void changePasswordVisibility() {
+    isPassword = !isPassword;
+    suffix =
+        isPassword ? Icons.visibility_off_outlined : Icons.visibility_outlined;
+
+    emit(RegistrationPasswordVisibility());
+  }
+
+  int currentStep = 0;
+  String? changeCurrentStep(int step) {
+    FocusManager.instance.primaryFocus?.unfocus();
+    if (step > 0) {
+      if (currentStep == 0) {
+        if (formKey1.currentState!.validate() && gender != null) {
+          currentStep += step;
+          emit(RegistrationChangeNotifier());
+          return "next";
+        } else {
+          return "incompleted";
+        }
+      } else if (currentStep == 1) {
+        if (operations != null &&
+            opLeader != null &&
+            location != null &&
+            rank != null) {
+          currentStep += step;
+          emit(RegistrationChangeNotifier());
+          return "next";
+        } else {
+          return "incompleted";
+        }
+      } else if (currentStep == 2) {
+        if (formKey2.currentState!.validate() && image != null) {
+          return "completed";
+        } else {
+          return "incompleted";
+        }
+      }
+    } else {
+      currentStep += step;
+      emit(RegistrationChangeNotifier());
+      return "back";
+    }
+
+    return null;
+  }
+
+  void changeRadiogender(dynamic input) {
+    gender = input;
+    emit(RegistrationChangeNotifier());
+  }
+
+  void changeRadioOperations(dynamic input) {
+    operations = input;
+    emit(RegistrationChangeNotifier());
+  }
+
+  void changeRadioOpLeader(dynamic input) {
+    opLeader = input;
+    emit(RegistrationChangeNotifier());
+  }
+
+  void changeRadioLocation(dynamic input) {
+    location = input;
+    emit(RegistrationChangeNotifier());
+  }
+
+  void changeRadioRank(dynamic input) {
+    rank = input;
+    emit(RegistrationChangeNotifier());
+  }
+}
