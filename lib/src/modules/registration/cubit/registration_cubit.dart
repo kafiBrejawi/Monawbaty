@@ -76,50 +76,32 @@ class RegistrationCubit extends Cubit<RegistrationState> {
           }));
       if (response.statusCode == 200) {
         phoneAuth();
-        //.whenComplete(() => emit(RegistrationSuccess()));
       } else {
-        throw Exception('Invalid');
+        throw Exception('invalid-data');
       }
     } catch (e) {
       emit(RegistrationFailure(e.toString()));
     }
   }
 
+  String? verification;
   Future phoneAuth() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-
-    await auth.verifyPhoneNumber(
-      //  phoneNumber: '+963952347334',
-      phoneNumber: '+963992844918',
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        // ANDROID ONLY!
-
-        // Sign the user in (or link) with the auto-generated credential
-        await auth.signInWithCredential(credential);
+    await FirebaseAuth.instance.verifyPhoneNumber(
+      phoneNumber: "+963${phoneController.text.substring(1)}",
+      timeout: const Duration(seconds: 60),
+      verificationCompleted: (PhoneAuthCredential credential) {},
+      verificationFailed: (FirebaseAuthException e) {
+        if (e.code == 'invalid-phone-number') {
+          emit(RegistrationFailure(e.code));
+        }
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        verification = verificationId;
+        emit(RegistrationSuccess());
       },
       codeAutoRetrievalTimeout: (String verificationId) {},
-      codeSent: (String verificationId, int? forceResendingToken) {},
-      verificationFailed: (FirebaseAuthException error) {},
     );
   }
-
-  // phoneAuth() async {
-  //   print("auth");
-  //   FirebaseAuth auth = FirebaseAuth.instance;
-  //   await FirebaseAuth.instance.verifyPhoneNumber(
-  //     phoneNumber: '+963992844918',
-  //     verificationCompleted: (PhoneAuthCredential credential) async {
-  //       // await auth.signInWithCredential(credential);
-  //     },
-  //     verificationFailed: (FirebaseAuthException e) {
-  //       if (e.code == 'invalid-phone-number') {
-  //         print('The provided phone number is not valid.');
-  //       }
-  //     },
-  //     codeSent: (String verificationId, int? resendToken) {},
-  //     codeAutoRetrievalTimeout: (String verificationId) {},
-  //   );
-  // }
 
   IconData suffix = Icons.visibility_off_outlined;
   bool isPassword = true;

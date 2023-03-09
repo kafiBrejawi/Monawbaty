@@ -25,7 +25,7 @@ class LoginScreen extends StatelessWidget {
         if (state is LoginFailure) {
           Navigator.pop(context);
           FocusManager.instance.primaryFocus?.unfocus();
-          if (state.error.toString() == 'Exception: Invalid') {
+          if (state.error.toString() == 'Exception: invalid-data') {
             showSnackBar(
                 context: context,
                 message: "اسم المستخدم أو كلمة المرور خاطئة",

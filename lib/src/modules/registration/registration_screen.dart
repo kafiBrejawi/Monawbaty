@@ -385,15 +385,30 @@ class RegistrationScreen extends StatelessWidget {
         }
         if (state is RegistrationSuccess) {
           Navigator.pop(context);
-          //  navigateTo(context, const OtpScreen());
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => OtpScreen(
+                        verificationId:
+                            RegistrationCubit.get(context).verification!,
+                        phoneNumber:
+                            RegistrationCubit.get(context).phoneController.text,
+                      )));
         }
         if (state is RegistrationFailure) {
           Navigator.pop(context);
           FocusManager.instance.primaryFocus?.unfocus();
-          if (state.error.toString() == 'Exception: Invalid') {
+          if (state.error.toString() == 'Exception: invalid-data') {
             showSnackBar(
                 context: context,
                 message: "الرجاء التأكد من صحة البيانات",
+                duration: 3,
+                icon: Icons.error_outline);
+          } else if (state.error.toString() ==
+              'Exception: invalid-phone-number') {
+            showSnackBar(
+                context: context,
+                message: "رقم الموبايل غير صالح",
                 duration: 3,
                 icon: Icons.error_outline);
           } else {
@@ -542,7 +557,7 @@ class RegistrationScreen extends StatelessWidget {
                                                       .changeCurrentStep(1);
                                               if (status == "completed") {
                                                 RegistrationCubit.get(context)
-                                                    .phoneAuth();
+                                                    .registrationUser();
                                               } else if (status ==
                                                   "incompleted") {
                                                 showSnackBar(
