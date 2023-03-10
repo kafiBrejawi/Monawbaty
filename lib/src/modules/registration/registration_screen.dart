@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:monawpaty/src/modules/otp/otp_screen.dart';
 import '../../shared/styles/colors.dart';
 import '../../shared/components/components.dart';
 import 'cubit/registration_cubit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:email_validator/email_validator.dart';
 
 class RegistrationScreen extends StatelessWidget {
   const RegistrationScreen({super.key});
@@ -30,8 +33,8 @@ class RegistrationScreen extends StatelessWidget {
                           controller:
                               RegistrationCubit.get(context).fullNameController,
                           type: TextInputType.text,
-                          label: 'الاسم الكامل',
-                          prefix: Icons.face,
+                          hint: 'الاسم الكامل',
+                          prefix: FontAwesomeIcons.solidIdCard,
                           validate: (val) {
                             if (val!.isEmpty) {
                               return 'يجب إدخال الاسم الكامل';
@@ -48,11 +51,13 @@ class RegistrationScreen extends StatelessWidget {
                           controller:
                               RegistrationCubit.get(context).emailController,
                           type: TextInputType.emailAddress,
-                          label: 'البريد الالكتروني',
-                          prefix: Icons.email,
+                          hint: 'البريد الالكتروني',
+                          prefix: Icons.mail,
                           validate: (val) {
                             if (val!.isEmpty) {
                               return 'يجب إدخال البريد الالكتروني';
+                            } else if (!EmailValidator.validate(val)) {
+                              return 'البريد الالكتروني غير صالح';
                             }
                             return null;
                           }),
@@ -66,7 +71,7 @@ class RegistrationScreen extends StatelessWidget {
                           controller:
                               RegistrationCubit.get(context).userNameController,
                           type: TextInputType.text,
-                          label: 'اسم المستخدم',
+                          hint: 'اسم المستخدم',
                           prefix: Icons.person,
                           validate: (val) {
                             if (val!.isEmpty) {
@@ -84,7 +89,7 @@ class RegistrationScreen extends StatelessWidget {
                           controller:
                               RegistrationCubit.get(context).passwordController,
                           type: TextInputType.visiblePassword,
-                          label: 'كلمة المرور',
+                          hint: 'كلمة المرور',
                           prefix: Icons.lock,
                           suffix: RegistrationCubit.get(context).suffix,
                           isPassword: RegistrationCubit.get(context).isPassword,
@@ -95,6 +100,8 @@ class RegistrationScreen extends StatelessWidget {
                           validate: (val) {
                             if (val!.isEmpty) {
                               return 'يجب إدخال كلمة المرور';
+                            } else if (val.length < 6) {
+                              return "يجب إدخال 6 محارف على الأقل";
                             }
                             return null;
                           }),
@@ -307,68 +314,96 @@ class RegistrationScreen extends StatelessWidget {
               title: const Text(""),
               content: Column(
                 children: <Widget>[
-                  CircleAvatar(
-                    radius: 50.0,
-                    backgroundColor: Colors.transparent,
-                    child: RegistrationCubit.get(context).imageFile == null
-                        ? Image.asset('assets/images/id.png')
-                        : Image.file(RegistrationCubit.get(context).imageFile!),
-                  ),
+                  Container(
+                      padding: const EdgeInsets.all(2),
+                      height: 110,
+                      width: 110,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            width: 4,
+                            color: RegistrationCubit.get(context).image == null
+                                ? thirdColor
+                                : Colors.greenAccent),
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      child: Image.asset('assets/images/press-card.png',
+                          fit: BoxFit.fill)),
                   const SizedBox(
                     height: 10.0,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      buildButton(
-                        height: 38,
-                        fontSize: 16,
-                        radius: 5,
-                        width: 100,
-                        text: "اختيار",
-                        backgroundColor: secondaryColor,
-                        borderColor: secondaryColor,
-                        foregroundColor: Colors.black54,
-                        function: () {
-                          RegistrationCubit.get(context).getImage();
-                        },
-                      ),
-                      buildButton(
-                        height: 38,
-                        fontSize: 16,
-                        radius: 5,
-                        width: 100,
-                        text: "تعليمات",
-                        backgroundColor: secondaryColor,
-                        borderColor: secondaryColor,
-                        foregroundColor: Colors.black54,
-                        function: () {},
-                      ),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        buildButton(
+                          height: 35,
+                          fontSize: 14,
+                          radius: 5,
+                          width: 100,
+                          text: "اختيار",
+                          backgroundColor: secondaryColor,
+                          borderColor: secondaryColor,
+                          foregroundColor: Colors.black54,
+                          function: () {
+                            RegistrationCubit.get(context).getImage();
+                          },
+                        ),
+                        buildButton(
+                          height: 35,
+                          fontSize: 14,
+                          radius: 5,
+                          width: 100,
+                          text: "تعليمات",
+                          backgroundColor: secondaryColor,
+                          borderColor: secondaryColor,
+                          foregroundColor: Colors.black54,
+                          function: () {},
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(
-                    height: 40.0,
+                    height: 20.0,
                   ),
                   Form(
                     key: RegistrationCubit.get(context).formKey2,
-                    child: SizedBox(
-                        height: 60,
-                        child: defaultFormField(
-                            controller:
-                                RegistrationCubit.get(context).phoneController,
-                            type: TextInputType.phone,
-                            label: 'رقم الموبايل',
-                            prefix: Icons.call,
-                            validate: (val) {
-                              if (val!.isEmpty) {
-                                return 'يجب إدخال رقم الموبايل';
-                              } else if (val.length < 10) {
-                                return "يجب إدخال عشر أرقام على الأقل";
-                              } else if (val[0] != '0' && val[1] != '9') {
-                                return "يجب أن يبدأ رقم الموبايل بـ 09";
-                              }
-                              return null;
-                            })),
+                    child: Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        height: 90,
+                        child: IntlPhoneField(
+                          controller:
+                              RegistrationCubit.get(context).phoneController,
+                          disableLengthCheck: true,
+                          invalidNumberMessage: "رقم الموبايل غير صالح",
+                          decoration: InputDecoration(
+                            labelText: ' \t \t \t رقم الموبايل',
+                            labelStyle: TextStyle(
+                                color: Colors.black,
+                                fontFamily: GoogleFonts.cairo().fontFamily,
+                                fontSize: 12),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(
+                                color: thirdColor,
+                                width: 2.0,
+                              ),
+                            ),
+                          ),
+                          initialCountryCode: 'SY',
+                          validator: (phone) {
+                            if (phone!.completeNumber.length != 13) {
+                              return "رقم الموبايل غير صالح";
+                            } else if (phone.completeNumber[4] != '9') {
+                              return "رقم الموبايل غير صالح";
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ),
                   ),
                   const SizedBox(
                     height: 10.0,
@@ -404,8 +439,7 @@ class RegistrationScreen extends StatelessWidget {
                 message: "الرجاء التأكد من صحة البيانات",
                 duration: 3,
                 icon: Icons.error_outline);
-          } else if (state.error.toString() ==
-              'Exception: invalid-phone-number') {
+          } else if (state.error.toString() == 'invalid-phone-number') {
             showSnackBar(
                 context: context,
                 message: "رقم الموبايل غير صالح",
@@ -440,7 +474,7 @@ class RegistrationScreen extends StatelessWidget {
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 40, right: 10),
+                    padding: const EdgeInsets.only(top: 50, right: 10),
                     child: Align(
                       alignment: Alignment.topRight,
                       child: IconButton(

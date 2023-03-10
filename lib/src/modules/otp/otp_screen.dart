@@ -6,6 +6,7 @@ import 'package:monawpaty/src/shared/components/components.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
 import '../../shared/styles/colors.dart';
+import '../home/home_screen.dart';
 import 'cubit/otp_cubit.dart';
 
 class OtpScreen extends StatelessWidget {
@@ -26,15 +27,15 @@ class OtpScreen extends StatelessWidget {
         }
         if (state is OtpSuccess) {
           Navigator.pop(context);
-          //  navigateAndFinish(context, const HomeScreen());
+          navigateTo(context, const HomeScreen());
         }
         if (state is OtpFailure) {
           Navigator.pop(context);
           FocusManager.instance.primaryFocus?.unfocus();
-          if (state.error.toString() == 'Exception: invalid') {
+          if (state.error.toString() == 'invalid-verification-code') {
             showSnackBar(
                 context: context,
-                message: "الرجاء التأكد من صحة الرمز",
+                message: "الرمز الذي أدخلته خاطئ",
                 duration: 3,
                 icon: Icons.error_outline);
           } else {
@@ -162,8 +163,6 @@ class OtpScreen extends StatelessWidget {
                                           backgroundColor: secondaryColor,
                                           enabledBorderColor: thirdColor,
                                           focusBorderColor: primaryColor),
-                                      controller:
-                                          OtpCubit.get(context).otpController,
                                       length: 6,
                                       width: MediaQuery.of(context).size.width,
                                       textFieldAlignment:
@@ -172,8 +171,14 @@ class OtpScreen extends StatelessWidget {
                                       fieldStyle: FieldStyle.box,
                                       outlineBorderRadius: 15,
                                       style: const TextStyle(fontSize: 17),
-                                      onChanged: (pin) {},
-                                      onCompleted: (pin) {}),
+                                      onChanged: (pin) {
+                                        OtpCubit.get(context).otpController =
+                                            pin;
+                                      },
+                                      onCompleted: (pin) {
+                                        OtpCubit.get(context).otpController =
+                                            pin;
+                                      }),
                                 ),
                                 const SizedBox(
                                   height: 25,
@@ -185,9 +190,16 @@ class OtpScreen extends StatelessWidget {
                                   borderColor: primaryColor,
                                   foregroundColor: Colors.white,
                                   function: () {
-                                    OtpCubit.get(context).otpAuth(
-                                        verification: verificationId,
-                                        code: '111222');
+                                    if (OtpCubit.get(context)
+                                            .otpController
+                                            .length ==
+                                        6) {
+                                      OtpCubit.get(context).otpAuth(
+                                          phoneNumber: phoneNumber,
+                                          verification: verificationId,
+                                          code: OtpCubit.get(context)
+                                              .otpController);
+                                    }
                                   },
                                 ),
                               ],

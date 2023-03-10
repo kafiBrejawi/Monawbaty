@@ -20,7 +20,7 @@ class LoginScreen extends StatelessWidget {
         }
         if (state is LoginSuccess) {
           Navigator.pop(context);
-          navigateAndFinish(context, const HomeScreen());
+          navigateTo(context, const HomeScreen());
         }
         if (state is LoginFailure) {
           Navigator.pop(context);
@@ -60,7 +60,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 40, right: 10),
+                    padding: const EdgeInsets.only(top: 50, right: 10),
                     child: Align(
                       alignment: Alignment.topRight,
                       child: IconButton(
@@ -153,7 +153,7 @@ class LoginScreen extends StatelessWidget {
                                           controller: LoginCubit.get(context)
                                               .usernameController,
                                           type: TextInputType.text,
-                                          label: 'اسم المستخدم',
+                                          hint: 'اسم المستخدم',
                                           prefix: Icons.person,
                                           validate: (val) {
                                             if (val!.isEmpty) {
@@ -171,7 +171,7 @@ class LoginScreen extends StatelessWidget {
                                           controller: LoginCubit.get(context)
                                               .passwordController,
                                           type: TextInputType.visiblePassword,
-                                          label: 'كلمة المرور',
+                                          hint: 'كلمة المرور',
                                           prefix: Icons.lock,
                                           suffix:
                                               LoginCubit.get(context).suffix,
@@ -184,6 +184,8 @@ class LoginScreen extends StatelessWidget {
                                           validate: (val) {
                                             if (val!.isEmpty) {
                                               return 'يجب إدخال كلمة المرور';
+                                            } else if (val.length < 6) {
+                                              return "يجب إدخال 6 محارف على الأقل";
                                             }
                                             return null;
                                           }),
@@ -206,11 +208,10 @@ class LoginScreen extends StatelessWidget {
                                     ),
                                     TextButton(
                                         child: const Text(
-                                          'نسيت كلمة المرور؟',
+                                          'هل نسيت كلمة المرور ؟',
                                           style: TextStyle(
                                               color: primaryColor,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 14),
+                                              fontSize: 13),
                                         ),
                                         onPressed: () {})
                                   ],

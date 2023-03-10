@@ -2,6 +2,7 @@ class ConstantsService {
   static String baseUrl = "https://hamzaekhwan.pythonanywhere.com/polls";
   static String logInEndpoint = "/authentications/login";
   static String registrationEndpoint = "/authentications/signup";
+  static String verifyOtpEndpoint = "/authentications/verify_otp";
   static String getResIdEndpoint = "/res";
   static String bookShiftEndpoint = "/reservepost";
   static String getTableShiftsEndpoint = "/valid_reservation_pro";

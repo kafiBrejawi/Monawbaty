@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:monawpaty/src/shared/end_points.dart';
 import '../../../../core/locator.dart';
 import '../../../../core/shared_prefrence_repository.dart';
-import 'package:monawpaty/src/shared/urls_constants.dart';
 import '../../../models/user.dart';
 import 'package:http/http.dart' as http;
 

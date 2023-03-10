@@ -1,11 +1,11 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:monawpaty/src/shared/end_points.dart';
 import 'package:http/http.dart' as http;
-import '../../../shared/urls_constants.dart';
+import 'dart:convert';
+import 'dart:io';
 
 part 'registration_state.dart';
 
@@ -66,7 +66,7 @@ class RegistrationCubit extends Cubit<RegistrationState> {
             "username": userNameController.text,
             "password": passwordController.text,
             "email": emailController.text,
-            "phoneNumber": "963${phoneController.text.substring(1)}",
+            "phoneNumber": "963${phoneController.text}",
             "gender": gender!,
             "operations": operations,
             "op_leader": opLeader,
@@ -87,7 +87,7 @@ class RegistrationCubit extends Cubit<RegistrationState> {
   String? verification;
   Future phoneAuth() async {
     await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: "+963${phoneController.text.substring(1)}",
+      phoneNumber: "+963${phoneController.text}",
       timeout: const Duration(seconds: 60),
       verificationCompleted: (PhoneAuthCredential credential) {},
       verificationFailed: (FirebaseAuthException e) {

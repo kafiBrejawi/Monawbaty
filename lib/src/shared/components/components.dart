@@ -32,7 +32,7 @@ Widget defaultFormField({
   required TextEditingController controller,
   required String? Function(String?) validate,
   required TextInputType type,
-  required String label,
+  required String hint,
   required IconData prefix,
   Function(String)? onSubmit,
   Function(String)? onChange,
@@ -55,8 +55,8 @@ Widget defaultFormField({
         filled: true,
         fillColor: secondaryColor,
         contentPadding: const EdgeInsets.symmetric(vertical: 12),
-        labelText: label,
-        labelStyle:
+        hintText: hint,
+        hintStyle:
             const TextStyle(color: thirdColor, fontWeight: FontWeight.w600),
         prefixIcon: Icon(
           prefix,

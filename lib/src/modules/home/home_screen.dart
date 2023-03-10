@@ -13,6 +13,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: Center(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: const [
             SizedBox(height: 60, child: Text("Home Page")),
           ],
