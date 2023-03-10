@@ -24,6 +24,27 @@ class SharedPreferencesRepository {
   SharedPreferencesRepository._internal() {
     _preferences = locator<SharedPreferences>();
   }
+
+  dynamic getData({
+    required String key,
+  }) {
+    return _preferences!.get(key);
+  }
+
+  Future<bool> savedata({required String key, required dynamic value}) async {
+    if (value is bool) {
+      return await _preferences!.setBool(key, value);
+    }
+    if (value is int) {
+      return await _preferences!.setInt(key, value);
+    }
+    if (value is double) {
+      return await _preferences!.setDouble(key, value);
+    }
+
+    return await _preferences!.setString(key, value);
+  }
+
   void logout() {
     _setPreference(
         prefName: loginKey, prefValue: false, prefType: PREF_TYPE_BOOL);
