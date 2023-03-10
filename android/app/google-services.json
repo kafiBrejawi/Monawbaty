@@ -14,7 +14,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "103009173711-klt8cjjk4u8pus5oa9b57qfqfskklue9.apps.googleusercontent.com",
+          "client_id": "103009173711-m6h9g70uvr8l8kq0ph30j7g53nsomqh2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.shk.monawpaty.monawpaty",
@@ -37,6 +37,13 @@
             {
               "client_id": "103009173711-sjf2m2m1dqj76r3l97va40j2pmo7kf2n.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "103009173711-kdhjp0grcfm22d4me5na9fi8d636dk48.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.shk.monawpaty.monawpaty"
+              }
             }
           ]
         }

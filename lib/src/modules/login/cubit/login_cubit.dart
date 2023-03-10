@@ -40,7 +40,7 @@ class LoginCubit extends Cubit<LoginState> {
         locator.get<SharedPreferencesRepository>().saveUserInfo(user: user);
         emit(LoginSuccess());
       } else if (response.statusCode == 401) {
-        throw Exception('Invalid');
+        throw Exception('invalid-data');
       }
     } catch (e) {
       emit(LoginFailure(e.toString()));

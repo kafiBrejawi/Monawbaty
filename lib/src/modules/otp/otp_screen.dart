@@ -3,11 +3,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:monawpaty/src/shared/components/components.dart';
+import 'package:otp_text_field/otp_text_field.dart';
+import 'package:otp_text_field/style.dart';
 import '../../shared/styles/colors.dart';
 import 'cubit/otp_cubit.dart';
 
 class OtpScreen extends StatelessWidget {
-  const OtpScreen({super.key});
+  final String verificationId;
+  final String phoneNumber;
+  const OtpScreen(
+      {super.key, required this.verificationId, required this.phoneNumber});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +31,7 @@ class OtpScreen extends StatelessWidget {
         if (state is OtpFailure) {
           Navigator.pop(context);
           FocusManager.instance.primaryFocus?.unfocus();
-          if (state.error.toString() == 'Exception: Invalid') {
+          if (state.error.toString() == 'Exception: invalid') {
             showSnackBar(
                 context: context,
                 message: "الرجاء التأكد من صحة الرمز",
@@ -57,26 +62,6 @@ class OtpScreen extends StatelessWidget {
                     borderRadius: BorderRadiusDirectional.vertical(
                       bottom: Radius.circular(
                         25.0,
-                      ),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 40, right: 10),
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: IconButton(
-                        onPressed: () async {
-                          FocusManager.instance.primaryFocus?.unfocus();
-                          await Future.delayed(
-                              const Duration(milliseconds: 100), () {
-                            Navigator.pop(context);
-                          });
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          size: 30,
-                          color: Colors.white,
-                        ),
                       ),
                     ),
                   ),
@@ -152,13 +137,14 @@ class OtpScreen extends StatelessWidget {
                                       fontFamily:
                                           GoogleFonts.cairo().fontFamily,
                                     ),
-                                    children: const <TextSpan>[
-                                      TextSpan(
+                                    children: <TextSpan>[
+                                      const TextSpan(
                                           text:
                                               "الرجاء إدخال رمز التحقق الذي أرسلناه \t \t \t \t \t \t \t \t \t \t إلى رقمك"),
                                       TextSpan(
-                                        text: '   4918*****963+',
-                                        style: TextStyle(
+                                        text:
+                                            '   ${phoneNumber.substring(phoneNumber.length - 4)}*****963+',
+                                        style: const TextStyle(
                                             fontSize: 17,
                                             color: primaryColor,
                                             fontWeight: FontWeight.bold),
@@ -169,17 +155,25 @@ class OtpScreen extends StatelessWidget {
                                 const SizedBox(
                                   height: 15,
                                 ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    codeInput(context: context),
-                                    codeInput(context: context),
-                                    codeInput(context: context),
-                                    codeInput(context: context),
-                                    codeInput(context: context),
-                                    codeInput(context: context)
-                                  ],
+                                Directionality(
+                                  textDirection: TextDirection.ltr,
+                                  child: OTPTextField(
+                                      otpFieldStyle: OtpFieldStyle(
+                                          backgroundColor: secondaryColor,
+                                          enabledBorderColor: thirdColor,
+                                          focusBorderColor: primaryColor),
+                                      controller:
+                                          OtpCubit.get(context).otpController,
+                                      length: 6,
+                                      width: MediaQuery.of(context).size.width,
+                                      textFieldAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      fieldWidth: 42,
+                                      fieldStyle: FieldStyle.box,
+                                      outlineBorderRadius: 15,
+                                      style: const TextStyle(fontSize: 17),
+                                      onChanged: (pin) {},
+                                      onCompleted: (pin) {}),
                                 ),
                                 const SizedBox(
                                   height: 25,
@@ -190,7 +184,11 @@ class OtpScreen extends StatelessWidget {
                                   backgroundColor: primaryColor,
                                   borderColor: primaryColor,
                                   foregroundColor: Colors.white,
-                                  function: () {},
+                                  function: () {
+                                    OtpCubit.get(context).otpAuth(
+                                        verification: verificationId,
+                                        code: '111222');
+                                  },
                                 ),
                               ],
                             )),
@@ -211,7 +209,8 @@ class OtpScreen extends StatelessWidget {
 }
 
 Widget codeInput(
-        {TextEditingController? controller, required BuildContext context}) =>
+        {required TextEditingController controller,
+        required BuildContext context}) =>
     SizedBox(
       height: 55,
       width: 42,
