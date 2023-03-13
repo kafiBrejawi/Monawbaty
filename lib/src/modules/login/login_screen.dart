@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:monawpaty/src/modules/home/home_screen.dart';
+import 'package:monawpaty/src/layout/app_layout.dart';
 import '../../shared/styles/colors.dart';
 import '../../shared/components/components.dart';
 import 'cubit/login_cubit.dart';
@@ -20,7 +20,7 @@ class LoginScreen extends StatelessWidget {
         }
         if (state is LoginSuccess) {
           Navigator.pop(context);
-          navigateTo(context, const HomeScreen());
+          navigateTo(context, const AppLayout());
         }
         if (state is LoginFailure) {
           Navigator.pop(context);

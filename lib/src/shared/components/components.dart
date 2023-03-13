@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../shared/styles/colors.dart';
 
 Widget buildButton(
@@ -112,8 +113,9 @@ Widget defaultDropdownButton(
             isExpanded: true,
             hint: Text(label),
             style: TextStyle(
-              color: thirdColor,
-              fontSize: fontSize ?? 16,
+              fontFamily: GoogleFonts.cairo().fontFamily,
+              color: Colors.black,
+              fontSize: fontSize ?? 14,
             ),
             iconEnabledColor: thirdColor,
             icon: const Icon(
@@ -134,6 +136,27 @@ Widget defaultDropdownButton(
             value: choice,
           ))),
     );
+
+Widget defaultChoiceChip(
+        {required double width,
+        required String label,
+        required variable,
+        required Function(bool)? onSelected}) =>
+    ChoiceChip(
+        label: SizedBox(
+          width: width,
+          height: 40,
+          child: Center(
+            child: Text(label,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.white, fontSize: 18)),
+          ),
+        ),
+        selected: variable == label,
+        onSelected: (bool selected) async {},
+        selectedColor: primaryColor,
+        shape: ContinuousRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0)));
 
 void showSnackBar(
     {required BuildContext context,
