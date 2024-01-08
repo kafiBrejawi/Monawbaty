@@ -14,3 +14,5 @@ class OtpFailure extends OtpState {
 
   OtpFailure(this.error);
 }
+
+class OtpPasswordVisibility extends OtpState {}

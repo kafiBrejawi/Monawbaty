@@ -51,9 +51,22 @@ class RegistrationCubit extends Cubit<RegistrationState> {
     }
   }
 
+  String? swapRank(String rank) {
+    if (rank == 'قائد') {
+      return "leader";
+    } else if (rank == 'كشاف') {
+      return "scout";
+    } else if (rank == 'مسعف') {
+      return "sought";
+    } else {
+      return rank;
+    }
+  }
+
   Future<void> registrationUser() async {
     try {
       emit(RegistrationLoading());
+      String? swapedRank = swapRank(rank!);
       var url = Uri.parse(
           ConstantsService.baseUrl + ConstantsService.registrationEndpoint);
 
@@ -71,7 +84,7 @@ class RegistrationCubit extends Cubit<RegistrationState> {
             "operations": operations,
             "op_leader": opLeader,
             "location": location!,
-            "rank": rank!,
+            "rank": swapedRank!,
             "image": image!
           }));
       if (response.statusCode == 200) {
@@ -167,12 +180,12 @@ class RegistrationCubit extends Cubit<RegistrationState> {
     emit(RegistrationChangeNotifier());
   }
 
-  void changeRadioLocation(dynamic input) {
+  void changeLocation(dynamic input) {
     location = input;
     emit(RegistrationChangeNotifier());
   }
 
-  void changeRadioRank(dynamic input) {
+  void changeRank(dynamic input) {
     rank = input;
     emit(RegistrationChangeNotifier());
   }

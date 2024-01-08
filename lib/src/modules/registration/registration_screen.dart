@@ -287,8 +287,7 @@ class RegistrationScreen extends StatelessWidget {
                           label: "المركز",
                           list: RegistrationCubit.get(context).locationList,
                           onChange: (val) {
-                            RegistrationCubit.get(context)
-                                .changeRadioLocation(val);
+                            RegistrationCubit.get(context).changeLocation(val);
                           }),
                       const SizedBox(width: 10),
                       defaultDropdownButton(
@@ -297,7 +296,7 @@ class RegistrationScreen extends StatelessWidget {
                           label: "الرتبة",
                           list: RegistrationCubit.get(context).rankList,
                           onChange: (val) {
-                            RegistrationCubit.get(context).changeRadioRank(val);
+                            RegistrationCubit.get(context).changeRank(val);
                           }),
                     ],
                   ),
@@ -426,7 +425,7 @@ class RegistrationScreen extends StatelessWidget {
                   builder: (context) => OtpScreen(
                         verificationId:
                             RegistrationCubit.get(context).verification!,
-                        phoneNumber:
+                        contact:
                             RegistrationCubit.get(context).phoneController.text,
                       )));
         }

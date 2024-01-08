@@ -13,9 +13,11 @@
 </queries>
     
    <application
-        android:label="monawpaty"
+        android:label="مناوباتي"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+           android:value="AIzaSyAzOhkF89FrK7sHa4-PjRs6boLHsmqcmgA"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -1,9 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:monawpaty/src/layout/app_layout.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:monawpaty/src/modules/login/login_screen.dart';
-import 'package:monawpaty/src/modules/registration/registration_screen.dart';
 import '../../shared/components/components.dart';
 import '../../shared/styles/colors.dart';
 
@@ -107,12 +107,12 @@ class WelcomeScreen extends StatelessWidget {
                         const SizedBox(height: 12),
                         buildButton(
                           width: size.width,
-                          text: "إنشاء حساب جديد",
+                          text: "الصفحة الرئيسية",
                           backgroundColor: Colors.white,
                           borderColor: primaryColor,
                           foregroundColor: primaryColor,
                           function: () {
-                            navigateTo(context, const RegistrationScreen());
+                            navigateTo(context, const AppLayout());
                           },
                         ),
                         const Spacer(
@@ -129,8 +129,8 @@ class WelcomeScreen extends StatelessWidget {
                 child: RichText(
                   text: TextSpan(
                     style: TextStyle(
-                        color: Colors.black,
                         fontFamily: GoogleFonts.cairo().fontFamily,
+                        color: Colors.black,
                         fontSize: 13),
                     children: <TextSpan>[
                       const TextSpan(text: 'بالمتابعة فإنك توافق على  '),

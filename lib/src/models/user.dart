@@ -6,6 +6,8 @@ class User {
   String? username;
   String? email;
   String? token;
+  String? fullname;
+  String? rank;
 
   User(
       {this.id,
@@ -14,7 +16,9 @@ class User {
       this.access,
       this.username,
       this.email,
-      this.token});
+      this.token,
+      this.fullname,
+      this.rank});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -24,6 +28,8 @@ class User {
     username = json['username'];
     email = json['email'];
     token = json['token'];
+    fullname = json['fullName'];
+    rank = json['rank'];
   }
 
   Map<String, dynamic> toJson() {
@@ -35,6 +41,8 @@ class User {
     data['username'] = username;
     data['email'] = email;
     data['token'] = token;
+    data['fullName'] = fullname;
+    data['rank'] = rank;
     return data;
   }
 }

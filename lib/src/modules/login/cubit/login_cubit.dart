@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:monawpaty/src/shared/end_points.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/locator.dart';
 import '../../../../core/shared_prefrence_repository.dart';
 import '../../../models/user.dart';
@@ -34,10 +34,8 @@ class LoginCubit extends Cubit<LoginState> {
       var responseBody = jsonDecode(response.body);
       if (response.statusCode == 200) {
         User user = User.fromJson(responseBody);
-        locator
-            .get<SharedPreferencesRepository>()
-            .setLoggedIn(isLoggedIn: true);
-        locator.get<SharedPreferencesRepository>().saveUserInfo(user: user);
+        locator<SharedPreferencesRepository>().setLoggedIn(isLoggedIn: true);
+        locator<SharedPreferencesRepository>().saveUserInfo(user: user);
         emit(LoginSuccess());
       } else if (response.statusCode == 401) {
         throw Exception('invalid-data');

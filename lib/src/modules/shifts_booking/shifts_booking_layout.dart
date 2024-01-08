@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:monawpaty/src/modules/shifts_booking/pages/booking_page/booking_screen.dart';
 import 'package:monawpaty/src/modules/shifts_booking/pages/booking_page/cubit/booking_cubit.dart';
+import 'package:monawpaty/src/modules/shifts_booking/pages/shifts_page/cubit/shifts_cubit.dart';
 import 'package:monawpaty/src/modules/shifts_booking/pages/shifts_page/shifts_screen.dart';
 import '../../shared/styles/colors.dart';
 
@@ -11,8 +12,15 @@ class ShiftsBookingLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => BookingCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => BookingCubit(),
+        ),
+        BlocProvider(
+          create: (context) => ShiftsCubit(),
+        ),
+      ],
       child: DefaultTabController(
         length: 2,
         child: Scaffold(
@@ -39,7 +47,8 @@ class ShiftsBookingLayout extends StatelessWidget {
               backgroundColor: primaryColor,
               centerTitle: true,
             ),
-            body: TabBarView(children: [BookingScreen(), ShiftsScreen()])),
+            body:
+                const TabBarView(children: [BookingScreen(), ShiftsScreen()])),
       ),
     );
   }

@@ -153,7 +153,7 @@ Widget defaultChoiceChip(
           ),
         ),
         selected: variable == label,
-        onSelected: (bool selected) async {},
+        onSelected: onSelected,
         selectedColor: primaryColor,
         shape: ContinuousRectangleBorder(
             borderRadius: BorderRadius.circular(12.0)));
@@ -187,16 +187,127 @@ circularProgress(BuildContext context) {
       context: context,
       builder: (BuildContext context) {
         return const Center(
-          child: SizedBox(
-            height: 50,
-            width: 50,
-            child: CircularProgressIndicator(
-                strokeWidth: 7,
-                backgroundColor: Colors.grey,
-                color: primaryColor),
-          ),
+          child: CircularProgressIndicator(
+              strokeWidth: 7,
+              backgroundColor: Colors.grey,
+              color: primaryColor),
         );
       });
+}
+
+Future<String?> locationDialog(BuildContext context) async {
+  String? location;
+  await showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+          return AlertDialog(
+              title: const Text("أدخل رقم المركز", textAlign: TextAlign.center),
+              titleTextStyle: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontSize: 20),
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
+              content: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                          color: Colors.black87,
+                          width: 1.2,
+                          style: BorderStyle.solid)),
+                  child: DropdownButtonHideUnderline(
+                      child: DropdownButton(
+                    borderRadius: const BorderRadius.all(Radius.circular(30)),
+                    isExpanded: true,
+                    style: const TextStyle(fontSize: 16, color: Colors.black),
+                    hint: Container(
+                      alignment: Alignment.center,
+                      child: const Text(
+                        "اختر المركز",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                    iconEnabledColor: primaryColor,
+                    icon: const Icon(Icons.arrow_drop_down_circle),
+                    items: ['300', '320', '350', '360', '370', '380', '390']
+                        .map((v) => DropdownMenuItem(
+                              value: v,
+                              child: SizedBox(
+                                  width: double.infinity,
+                                  child: Text(
+                                    v,
+                                    textAlign: TextAlign.center,
+                                  )),
+                            ))
+                        .toList(),
+                    onChanged: (val) {
+                      setState(() {
+                        location = val.toString();
+                      });
+                    },
+                    value: location,
+                  ))),
+              actions: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButtonTheme(
+                        data: ElevatedButtonThemeData(
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.resolveWith<
+                                OutlinedBorder>((_) {
+                              return const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5)));
+                            }),
+                          ),
+                        ),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.red,
+                          ),
+                          onPressed: () {
+                            location = null;
+                            Navigator.pop(context);
+                          },
+                          child: const Text('إلغاء',
+                              style: TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.bold)),
+                        )),
+                    ElevatedButtonTheme(
+                        data: ElevatedButtonThemeData(
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.resolveWith<
+                                OutlinedBorder>((_) {
+                              return const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5)));
+                            }),
+                          ),
+                        ),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.green,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('موافق',
+                              style: TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.bold)),
+                        )),
+                  ],
+                ),
+              ]);
+        });
+      });
+  return location;
 }
 
 void navigateTo(context, widget) => Navigator.push(

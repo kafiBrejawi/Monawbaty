@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:monawpaty/src/modules/map/map_screen.dart';
+import 'package:monawpaty/src/modules/pdf/pdf_screen.dart';
+import 'package:monawpaty/src/shared/components/components.dart';
 import '../../shared/styles/colors.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -59,31 +62,41 @@ class HomeScreen extends StatelessWidget {
             Column(children: [
               SizedBox(height: size.height * 0.5 - 100),
               SizedBox(
-                height: 200,
+                height: 175,
                 width: size.width,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
                     buildCard(
-                        label: "الهيكلية العامة \n لفرق الإسعاف",
-                        image: "assets/images/logo.png",
-                        onTap: () {}),
-                    buildCard(
                         label: "الدليل المركزي \n الموحد للإسعاف",
                         image: "assets/images/guide.png",
-                        onTap: () {}),
+                        context: context,
+                        pdfName: "central_directory",
+                        title: "الدليل المركزي"),
+                    buildCard(
+                        label: "الهيكلية العامة \n لفرق الإسعاف",
+                        image: "assets/images/organization.png",
+                        context: context,
+                        pdfName: "rules_of_procedure",
+                        title: "الهيكلية العامة"),
                     buildCard(
                         label: "أرقام عمليات \n الهلال الاحمر",
                         image: "assets/images/call-center-service.png",
-                        onTap: () {}),
+                        context: context,
+                        pdfName: "operation_numbers",
+                        title: "أرقام عمليات الهلال الأحمر"),
                     buildCard(
                         label: "أرقام المستشفيات \n في حمص",
                         image: "assets/images/hospital.png",
-                        onTap: () {}),
+                        context: context,
+                        pdfName: "hospitals_numbers",
+                        title: "أرقام المستشفيات"),
                     buildCard(
                         label: "أرقام الأطباء \n في حمص",
                         image: "assets/images/medical-team.png",
-                        onTap: () {}),
+                        context: context,
+                        pdfName: "doctors_numbers",
+                        title: "أرقام الأطباء")
                   ],
                 ),
               ),
@@ -100,7 +113,9 @@ class HomeScreen extends StatelessWidget {
                   clipBehavior: Clip.antiAlias,
                   child: InkWell(
                     autofocus: true,
-                    //   onTap: model.navToMap,
+                    onTap: () {
+                      navigateTo(context, const MapScreen());
+                    },
                     child: Ink(
                       color: Colors.white,
                       child: Row(children: <Widget>[
@@ -131,12 +146,14 @@ class HomeScreen extends StatelessWidget {
 Widget buildCard(
         {required String label,
         required String image,
-        required Function()? onTap}) =>
+        required BuildContext context,
+        required String pdfName,
+        required String title}) =>
     Container(
-        width: 150,
+        width: 140,
         margin: const EdgeInsets.symmetric(horizontal: 10),
         child: Card(
-          elevation: 3,
+          elevation: 1,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
@@ -144,7 +161,15 @@ Widget buildCard(
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             autofocus: true,
-            onTap: onTap,
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => PdfScreen(
+                            pdfName: pdfName,
+                            title: title,
+                          )));
+            },
             child: Ink(
               color: Colors.white,
               child: Column(
